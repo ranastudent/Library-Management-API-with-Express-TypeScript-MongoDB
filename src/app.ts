@@ -7,7 +7,7 @@ import borrowRoutes from "./app/routes/borrow.route";
 
 export const app: Application = express();
 
-// Middleware
+// Middleware  fd
 app.use(cors());
 app.use(express.json());
 app.use('/api/books', bookRoutes);
