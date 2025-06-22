@@ -20,3 +20,55 @@ npm run dev
 * Node.js (v18 or above recommended)
 * MongoDB installed locally or use a cloud DB (e.g., MongoDB Atlas)
 
+📌 Features
+✅ Create Book
+Add new books with validation (title, author, genre, ISBN, etc.)
+
+🔍 Get All Books
+Supports filtering by genre, sorting (asc/desc), and result limiting.
+
+📄 Get Book by ID
+Retrieve full details of a specific book by its MongoDB ID.
+
+📝 Update Book
+Update any field of a book, including available copies.
+
+❌ Delete Book
+Permanently remove a book from the database.
+
+📚 Borrow a Book
+
+Verifies if enough copies are available.
+
+Deducts the quantity from the book’s total.
+
+Sets available to false when copies become 0.
+
+Implements Mongoose instance method for availability control.
+
+📊 Borrow Summary (Aggregation)
+
+Returns total quantity borrowed for each book.
+
+Includes book title and ISBN.
+
+Built using MongoDB Aggregation Pipeline.
+
+⚙️ Proper Validation & Error Handling
+
+Uses zod for schema validation.
+
+Custom error responses match expected structure.
+
+🧩 Clean Architecture
+
+Follows MVC pattern (Models, Controllers, Routes).
+
+Uses separate interfaces, utils, and middlewares.
+
+🌱 MongoDB & Mongoose Integration
+
+Connected to MongoDB via Mongoose.
+
+Uses built-in timestamps and data relations.
+
