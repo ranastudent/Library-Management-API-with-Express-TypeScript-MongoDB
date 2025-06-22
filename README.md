@@ -26,7 +26,9 @@ npm run dev
 * MongoDB installed locally or use a cloud DB (e.g., MongoDB Atlas)
 
 📌 Features
+
 ✅ Create Book
+
 Add new books with validation (title, author, genre, ISBN, etc.)
 
 🔍 Get All Books
