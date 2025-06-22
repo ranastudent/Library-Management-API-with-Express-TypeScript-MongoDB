@@ -15,3 +15,8 @@ DATABASE_URL=your_mongodb_connection_uri
 For Development:
 This will run the TypeScript code directly using ts-node-dev:
 npm run dev
+
+✅ Tools Required
+* Node.js (v18 or above recommended)
+* MongoDB installed locally or use a cloud DB (e.g., MongoDB Atlas)
+
