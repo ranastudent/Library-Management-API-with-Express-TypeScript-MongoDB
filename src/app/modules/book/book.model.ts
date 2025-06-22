@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { IBook } from '../../interfaces/book.interface';
+import { BookInstanceMethods, IBook } from '../../interfaces/book.interface';
+
+import { Model } from 'mongoose';
 
 const bookSchema = new Schema<IBook>(
   {
@@ -43,4 +45,16 @@ const bookSchema = new Schema<IBook>(
   }
 );
 
-export const Book = model<IBook>('Book', bookSchema);
+bookSchema.method("updateAvailabilityIfNeeded", function () {
+  if (this.copies === 0) {
+    this.available = false;
+  }
+});
+
+
+export const Book = model<IBook, Model<IBook, object, object, BookInstanceMethods>>(
+  "Book",
+  bookSchema
+);
+
+

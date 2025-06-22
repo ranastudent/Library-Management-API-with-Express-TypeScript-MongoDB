@@ -1,11 +1,14 @@
-export type IGenre = 'FICTION' | 'NON_FICTION' | 'SCIENCE' | 'HISTORY' | 'BIOGRAPHY' | 'FANTASY';
-
+import { Document } from 'mongoose';
 export interface IBook {
   title: string;
   author: string;
-  genre: IGenre;
+  genre: "FICTION" | "NON_FICTION" | "SCIENCE" | "HISTORY" | "BIOGRAPHY" | "FANTASY";
   isbn: string;
   description?: string;
   copies: number;
-  available?: boolean;
+  available: boolean;
+}
+
+export interface BookInstanceMethods {
+  updateAvailabilityIfNeeded(this: Document & IBook): void;
 }
