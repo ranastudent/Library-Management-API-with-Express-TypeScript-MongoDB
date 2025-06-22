@@ -11,7 +11,18 @@ export const createBook = async (req: Request, res: Response) => {
     res.status(201).json({
       success: true,
       message: "Book created successfully",
-      data: book,
+      data: {
+        _id: book._id,
+        title: book.title,
+        author: book.author,
+        genre: book.genre,
+        isbn: book.isbn,
+        description: book.description,
+        copies: book.copies,
+        available: book.available,
+        createdAt: book.createdAt,
+        updatedAt: book.updatedAt,
+      },
     });
   } catch (error) {
     res.status(400).json({
@@ -30,7 +41,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
       filter,
       sortBy = "createdAt",
       sort = "asc",
-      limit = '10',
+      limit = "10",
     } = req.query as {
       filter?: string;
       sortBy?: string;
@@ -77,7 +88,7 @@ export const getBookById = async (
     if (!mongoose.Types.ObjectId.isValid(bookId)) {
       res.status(400).json({
         success: false,
-        message: 'Invalid book ID format',
+        message: "Invalid book ID format",
         data: null,
       });
       return;
@@ -88,7 +99,7 @@ export const getBookById = async (
     if (!book) {
       res.status(404).json({
         success: false,
-        message: 'Book not found',
+        message: "Book not found",
         data: null,
       });
       return;
@@ -97,7 +108,7 @@ export const getBookById = async (
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      message: 'Book retrieved successfully',
+      message: "Book retrieved successfully",
       data: book,
     });
   } catch (error) {
@@ -144,7 +155,11 @@ export const updateBookById = async (req: Request, res: Response) => {
 
 // DELETE Book by ID
 
-export const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const bookId = req.params.bookId;
 
@@ -160,6 +175,3 @@ export const deleteBook = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
-
-
-
