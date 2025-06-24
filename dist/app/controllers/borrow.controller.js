@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,11 +8,11 @@ const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
 const book_model_1 = require("../modules/book/book.model");
 const borrow_model_1 = require("../modules/borrow/borrow.model");
 // create borrow book
-const borrowBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const borrowBook = async (req, res, next) => {
     try {
         const { book: bookId, quantity, dueDate } = req.body;
         // 🔹 Stage 1: Find the book and check availability
-        const book = yield book_model_1.Book.findById(bookId);
+        const book = await book_model_1.Book.findById(bookId);
         if (!book) {
             return (0, sendResponse_1.default)(res, {
                 statusCode: 404,
@@ -41,9 +32,9 @@ const borrowBook = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         // 🔹 Stage 2: Update book copies and availability
         book.copies -= quantity;
         book.updateAvailabilityIfNeeded(); // instance method
-        yield book.save();
+        await book.save();
         // 🔹 Save borrow record
-        const borrow = yield borrow_model_1.Borrow.create({
+        const borrow = await borrow_model_1.Borrow.create({
             book: book._id,
             quantity,
             dueDate,
@@ -66,11 +57,11 @@ const borrowBook = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     catch (error) {
         next(error);
     }
-});
+};
 exports.borrowBook = borrowBook;
 // GET All Borrow book
-const getBorrowSummary = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield borrow_model_1.Borrow.aggregate([
+const getBorrowSummary = async (req, res) => {
+    const result = await borrow_model_1.Borrow.aggregate([
         {
             $group: {
                 _id: "$book", // group by book ID
@@ -103,5 +94,5 @@ const getBorrowSummary = (req, res) => __awaiter(void 0, void 0, void 0, functio
         message: "Borrowed books summary retrieved successfully",
         data: result
     });
-});
+};
 exports.getBorrowSummary = getBorrowSummary;
