@@ -11,7 +11,7 @@ export const app: Application = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/books', bookRoutes);
-app.use('/api/borrows', borrowRoutes);
+app.use('/api/borrow', borrowRoutes);
 
 // Default route (you can remove this later)
 app.get("/", (req: Request, res: Response) => {
