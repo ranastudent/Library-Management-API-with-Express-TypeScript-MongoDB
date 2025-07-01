@@ -42,11 +42,13 @@ export const getAllBooks = async (req: Request, res: Response) => {
       sortBy = "createdAt",
       sort = "asc",
       limit = "10",
+      page = "1",
     } = req.query as {
       filter?: string;
       sortBy?: string;
       sort?: "asc" | "desc";
       limit?: string;
+      page?: string;
     };
 
     const query: BookQuery = {};
@@ -55,15 +57,28 @@ export const getAllBooks = async (req: Request, res: Response) => {
     }
 
     const sortOrder = sort === "asc" ? 1 : -1;
+    const numericLimit = parseInt(limit);
+    const numericPage = parseInt(page);
+    const skip = (numericPage - 1) * numericLimit;
 
     const books = await Book.find(query)
-      .sort({ [sortBy as string]: sortOrder })
-      .limit(parseInt(limit as string));
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(numericLimit);
+
+    const total = await Book.countDocuments(query);
 
     res.status(200).json({
       success: true,
       message: "Books retrieved successfully",
-      data: books,
+      data: {
+        meta: {
+          page: numericPage,
+          limit: numericLimit,
+          total,
+        },
+        books,
+      },
     });
   } catch (error) {
     res.status(400).json({
@@ -73,6 +88,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 // GET Book by ID
 

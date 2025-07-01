@@ -40,19 +40,31 @@ exports.createBook = createBook;
 // GET api/books for get all books
 const getAllBooks = async (req, res) => {
     try {
-        const { filter, sortBy = "createdAt", sort = "asc", limit = "10", } = req.query;
+        const { filter, sortBy = "createdAt", sort = "asc", limit = "10", page = "1", } = req.query;
         const query = {};
         if (filter) {
             query.genre = filter;
         }
         const sortOrder = sort === "asc" ? 1 : -1;
+        const numericLimit = parseInt(limit);
+        const numericPage = parseInt(page);
+        const skip = (numericPage - 1) * numericLimit;
         const books = await book_model_1.Book.find(query)
             .sort({ [sortBy]: sortOrder })
-            .limit(parseInt(limit));
+            .skip(skip)
+            .limit(numericLimit);
+        const total = await book_model_1.Book.countDocuments(query);
         res.status(200).json({
             success: true,
             message: "Books retrieved successfully",
-            data: books,
+            data: {
+                meta: {
+                    page: numericPage,
+                    limit: numericLimit,
+                    total,
+                },
+                books,
+            },
         });
     }
     catch (error) {
