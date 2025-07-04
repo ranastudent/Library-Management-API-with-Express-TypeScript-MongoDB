@@ -51,10 +51,20 @@ export const getAllBooks = async (req: Request, res: Response) => {
       page?: string;
     };
 
-    const query: BookQuery = {};
-    if (filter) {
-      query.genre = filter;
-    }
+    const query: BookQuery = {} as BookQuery;
+
+if (filter) {
+  const terms = filter.split(" ").filter(Boolean); // e.g., "Reduanul Islam" -> ["Reduanul", "Islam"]
+
+  query.$and = terms.map((term) => ({
+    $or: [
+      { title: { $regex: term, $options: "i" } },
+      { author: { $regex: term, $options: "i" } },
+      { genre: { $regex: term, $options: "i" } },
+    ],
+  }));
+}
+
 
     const sortOrder = sort === "asc" ? 1 : -1;
     const numericLimit = parseInt(limit);

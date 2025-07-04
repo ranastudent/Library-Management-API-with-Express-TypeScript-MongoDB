@@ -43,7 +43,14 @@ const getAllBooks = async (req, res) => {
         const { filter, sortBy = "createdAt", sort = "asc", limit = "10", page = "1", } = req.query;
         const query = {};
         if (filter) {
-            query.genre = filter;
+            const terms = filter.split(" ").filter(Boolean); // e.g., "Reduanul Islam" -> ["Reduanul", "Islam"]
+            query.$and = terms.map((term) => ({
+                $or: [
+                    { title: { $regex: term, $options: "i" } },
+                    { author: { $regex: term, $options: "i" } },
+                    { genre: { $regex: term, $options: "i" } },
+                ],
+            }));
         }
         const sortOrder = sort === "asc" ? 1 : -1;
         const numericLimit = parseInt(limit);
